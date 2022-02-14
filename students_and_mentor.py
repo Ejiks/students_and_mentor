@@ -8,15 +8,30 @@ class Lecturer(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
-    def __str__(self):
+
+    def grade_stat(self):
         grade_sum = 0
         grade_num = 0
         for grade_list in list(self.grades.values()):
             grade_sum += sum(grade_list)
             grade_num += len(grade_list)
-        grade_stat = round(grade_sum/grade_num, 1)
-        res = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {grade_stat}'
+        if grade_num == 0:
+            grade_stat = "Нет оценок"
+            return grade_stat
+        else:
+            grade_stat = round(grade_sum/grade_num, 1)
+            return grade_stat
+
+    def __str__(self):
+        res = f'Имя: {self.name}\nФамилия: {self.surname}\nСредняя оценка за лекции: {self.grade_stat()}'
         return res
+
+    def __lt__(self, lecturer):
+        if not isinstance(lecturer, Lecturer):
+            print("Не лектор")
+            return
+        return self.grade_stat < lecturer.grade_stat
+
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
@@ -51,7 +66,7 @@ class Student:
         else:
             return 'Ошибка'
     
-    def __str__(self):
+    def grade_stat(self):
         grade_sum = 0
         grade_num = 0
         for grade_list in list(self.grades.values()):
@@ -59,18 +74,43 @@ class Student:
             grade_num += len(grade_list)
         if grade_num == 0:
             grade_stat = "Нет оценок"
+            return grade_stat
         else:
             grade_stat = round(grade_sum/grade_num, 1)
+            return grade_stat
+    
+    def __str__(self):
         res = f'Имя: {self.name}\nФамилия: {self.surname}\n\
-            \rСредняя оценка за домашние задания: {grade_stat}\n\
+            \rСредняя оценка за домашние задания: {self.grade_stat()}\n\
             \rКурсы в процессе изучения: {" ".join(self.courses_in_progress)}\n\
             \rЗавершенные курсы: {" ".join(self.finished_courses)}'
         return res
+
+    def __lt__(self, student):
+            if not isinstance(student, Student):
+                print("Не студент")
+                return
+            return self.grade_stat < student.grade_stat
+
+
+def student_statistics(students, cours):
+    grade_val = 0
+    grade_num = 0
+    for student in students:
+        grade_val += sum(student.grades.get(cours))
+        grade_num += len(student.grades.get(cours))
+    grade_stats = round(grade_val/grade_num, 1)
+    return grade_stats
         
+
+def lecturer_statistics(lecturers, cours):
+    pass
+
+
 first_student = Student("Piter", "Ivanov", "man")
 second_student = Student("Vova", "Petrov", "man")
 first_student.courses_in_progress += ["Python"]
-second_student.courses_in_progress += ["Java"]
+second_student.courses_in_progress += ["Java", "Python"]
 first_student.finished_courses += ["Git"]
 
 green_lector = Lecturer("Sidor", "Petrovich")
@@ -90,6 +130,7 @@ print(green_lector.grades)
 
 new_reviwer.rate_hw(second_student, "Java", 8)
 old_reviwer.rate_hw(first_student, "Git", 7)
+old_reviwer.rate_hw(first_student, "Python", 10)
 print(second_student.grades)
 print(first_student.grades)
 
@@ -97,3 +138,6 @@ print(old_reviwer)
 print(green_lector)
 print(second_student)
 print(first_student)
+
+students = [first_student, second_student]
+print(student_statistics(students, "Python"))
