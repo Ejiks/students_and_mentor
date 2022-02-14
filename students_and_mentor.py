@@ -46,6 +46,13 @@ class Student:
         else:
             return 'Ошибка'
         
+        def __lt__(self, student):
+            if not isinstance(student, Student):
+                print ("Не студент")
+                return
+            return
+
+        
 first_student = Student("Piter", "Ivanov", "man")
 second_student = Student("Vova", "Petrov", "man")
 first_student.courses_in_progress += ["Python"]
