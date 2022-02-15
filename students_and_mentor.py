@@ -32,7 +32,6 @@ class Lecturer(Mentor):
             return
         return self.grade_stat < lecturer.grade_stat
 
-
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
         if (isinstance(student, Student) and course in self.courses_attached
@@ -92,7 +91,6 @@ class Student:
                 return
             return self.grade_stat < student.grade_stat
 
-
 def student_statistics(students, cours):
     grade_val = 0
     grade_num = 0
@@ -103,9 +101,8 @@ def student_statistics(students, cours):
     if grade_num == 0:
         grade_stats = "Нет оценок"
     else:
-        grade_stats = f'Средняя оценка: {round(grade_val/grade_num, 1)}'
+        grade_stats = f'Средняя оценка студентов: {round(grade_val/grade_num, 1)}'
     return grade_stats
-       
 
 def lecturer_statistics(lecturers, cours):
     grade_val = 0
@@ -116,7 +113,7 @@ def lecturer_statistics(lecturers, cours):
     if grade_num == 0:
         grade_stats = "Нет оценок"
     else:
-        grade_stats = f'Средняя оценка: {round(grade_val/grade_num, 1)}'
+        grade_stats = f'Средняя оценка лекторов: {round(grade_val/grade_num, 1)}'
     return grade_stats
     
 
@@ -131,6 +128,7 @@ green_lector = Lecturer("Sidor", "Petrovich")
 red_lector = Lecturer("Rinat", "Torvald")
 green_lector.courses_attached += ["Python"]
 red_lector.courses_attached += ["Java"]
+red_lector.courses_attached += ["Python"]
 green_lector.courses_attached += ["Git"]
 
 old_reviwer = Reviewer("Varvara", "Reut")
@@ -140,19 +138,33 @@ new_reviwer.courses_attached += ["Java"]
 old_reviwer.courses_attached += ["Git"]
 
 first_student.lecture_grade(green_lector, "Python", 10)
+second_student.lecture_grade(green_lector, "Python", 8)
+first_student.lecture_grade(red_lector, "Python", 10)
+second_student.lecture_grade(red_lector, "Python", 4)
 print(green_lector.grades)
+print()
 
 new_reviwer.rate_hw(second_student, "Java", 8)
 old_reviwer.rate_hw(first_student, "Git", 7)
 old_reviwer.rate_hw(first_student, "Python", 10)
 old_reviwer.rate_hw(second_student, "Python", 7)
 print(second_student.grades)
+print()
 print(first_student.grades)
+print()
 
 print(old_reviwer)
+print()
 print(green_lector)
+print()
 print(second_student)
+print()
 print(first_student)
+print()
 
 students = [first_student, second_student]
 print(student_statistics(students, "Python"))
+print()
+
+lecturers = [red_lector, green_lector]
+print(lecturer_statistics(lecturers, "Python"))
